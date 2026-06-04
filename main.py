@@ -7,7 +7,15 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from sklearn.metrics import classification_report
-
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import GridSearchCV
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import Adam
+import keras_tuner
+from keras import callbacks
+from keras.models import load_model
+import streamlit as st
 
 sns.set_style("whitegrid")
 
@@ -17,13 +25,13 @@ data = data.iloc[:, 1:]
 data = data.drop_duplicates().reset_index(drop=True)
 
 # sns.countplot(x="is_tv_subscriber", hue="is_tv_subscriber", data=data, legend= True)
-# plt.xlabel("Чи підписаний на телебачення", fontsize="medium", color="midnightblue")
+# plt.xlabel("Підписка клієнтів на телебачення", fontsize="medium", color="midnightblue")
 # plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
 # plt.legend(["0 - без підписки", "1 - з підпискою"], fontsize=10)
 # plt.show()
 
 # sns.countplot(x="is_movie_package_subscriber", hue="is_movie_package_subscriber", data=data, legend= True)
-# plt.xlabel("Чи підписаний на пакет фільмів", fontsize="medium", color="midnightblue")
+# plt.xlabel("Підписка клієнтів на пакет фільмів", fontsize="medium", color="midnightblue")
 # plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
 # plt.legend(["0 - без підписки", "1 - з підпискою"], fontsize=10)
 # plt.show()
@@ -95,7 +103,6 @@ data = data.astype(float)
 print(data.info())
 
 
-
 data = shuffle(data, random_state=42)
 
 scaler = StandardScaler().set_output(transform="pandas")
@@ -108,9 +115,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+### Звичайний класифікатор для порівння значень моделі
 
-# from sklearn.linear_model import SGDClassifier
-# from sklearn.model_selection import GridSearchCV
 
 # sgd_clf = SGDClassifier(random_state=42)
 
@@ -130,53 +136,71 @@ X_test = scaler.transform(X_test)
 
 # print(classification_report(y_test, y_pred))
 
-print(X_train.shape)
-print(X_test.shape)
 
-from keras.models import Sequential
-from keras.layers import Dense, Dropout
-from keras import optimizers
-from keras import losses
-from keras import metrics
-from keras.optimizers import Adam
-import keras_tuner
+### Нейронна мережа для порівняння якості моделі
 
+# callback = callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min', restore_best_weights=True)
 
-def build_model(hp):
-    model = Sequential()
-    for i in range(hp.Int("num_layers", 1, 3)):
+# def build_model(hp):
+#     model = Sequential()
+#     for i in range(hp.Int("num_layers", 1, 3)):
 
-        model.add(Dense(
-            units=hp.Int(f"units_{i}", min_value=32, max_value=512, step=32),
-            activation=hp.Choice("activation", ["relu", "tanh"])))
+#         model.add(Dense(
+#             units=hp.Int(f"units_{i}", min_value=32, max_value=512, step=32),
+#             activation=hp.Choice(f"activation_{i}", ["relu", "tanh"])))
+        
+#         if hp.Boolean("dropout"):
+#             model.add(Dropout(rate=0.25))
     
-    if hp.Boolean("dropout"):
-        model.add(Dropout(rate=0.25))
-    
-    model.add(Dense(1, activation="sigmoid"))
+#     model.add(Dense(1, activation="sigmoid"))
 
-    learning_rate = hp.Float("lr", min_value=1e-4, max_value=1e-2, sampling="log")
-    model.compile(
-        optimizer=Adam(learning_rate=learning_rate),
-        loss="categorical_crossentropy",
-        metrics=["accuracy"],
-    )
-    return model
+#     learning_rate = hp.Float("lr", min_value=1e-4, max_value=1e-2, sampling="log")
+#     model.compile(
+#         optimizer=Adam(learning_rate=learning_rate),
+#         loss="binary_crossentropy",
+#         metrics=["accuracy"],
+#     )
+#     return model
 
 
-tuner = keras_tuner.RandomSearch(
-    hypermodel=build_model,
-    objective="val_accuracy",
-    max_trials=3,
-    executions_per_trial=2,
-    overwrite=True,
-    directory="my_dir",
-    project_name="neuralnet",
-)
+# tuner = keras_tuner.RandomSearch(
+#     hypermodel=build_model,
+#     objective="val_accuracy",
+#     max_trials=15,
+#     executions_per_trial=2,
+#     overwrite=True,
+#     directory="my_dir",
+#     project_name="neuralnet",
+# )
 
 
-tuner.search(X_train, y_train, epochs=2, validation_split=0.2)
+# tuner.search(X_train, y_train, epochs=20, validation_split=0.2, callbacks = [callback])
 
-models = tuner.get_best_models(num_models=2)
-best_model = models[0]
-best_model.summary()
+# best_models = tuner.get_best_models(num_models=1)
+# best_model = best_models[0]
+# best_model.summary()
+# best_model.save("my_best_model.keras")
+
+# y_pred = best_model.predict(X_test)
+
+# y_pred = (y_pred > 0.5).astype("int")
+
+# print(classification_report(y_test, y_pred))
+
+### Нейронна модель вказала на кращі результати, тому для подальшої класифікації даних будемо використовувати її
+
+loaded_model = load_model("my_best_model.keras")
+
+st.title("Прогнозування ймовірності відтоку клієнта")
+
+st.write("Будь ласка, введіть дані про клієнта використовуючи поля для тексту")
+
+is_tv_sub = st.radio("Чи має підписку на телебачення", ["Так", "Ні"])
+is_movie_sub = st.radio("Чи має підписку на пакет фільмів", ["Так", "Ні"])
+st.number_input("Вкажіть термін підписки")
+st.number_input("Вкажіть його середній рахунок")
+st.number_input("Вкажіть термін контракту")
+st.number_input("Вкажіть кількість збоїв у сервері")
+st.number_input("Вкажіть середню кількість завантажень")
+st.number_input("Вкажіть середню кількість вивантажень")
+st.number_input("Вкажіть кількість скачувань понад норму")
