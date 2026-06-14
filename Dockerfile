@@ -1,12 +1,15 @@
 FROM python:3.11-slim
 
-ENV APP_HOME=/app
+ENV APP_HOME=/app \
+POETRY_VIRTUALENVS_CREATE=false
 
 WORKDIR $APP_HOME
 
-COPY requirements.txt .
+RUN pip install --no-cache-dir poetry
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml poetry.lock ./
+
+RUN poetry install --no-root --only main
 
 COPY . .
 

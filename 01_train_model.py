@@ -24,10 +24,14 @@ import joblib
 
 sns.set_style("whitegrid")
 
+#Завантаження даних, видалення дублікатів
+
 data = pd.read_csv("internet_service_churn.csv")
 print(data.head(10))
 data = data.iloc[:, 1:]
 data = data.drop_duplicates().reset_index(drop=True)
+
+#Візуалізація кожної змінної
 
 sns.countplot(x="is_tv_subscriber", hue="is_tv_subscriber", data=data, legend= True)
 plt.xlabel("Підписка клієнтів на телебачення", fontsize="medium", color="midnightblue")
@@ -97,14 +101,19 @@ plt.show()
 
 print(data.info())
 
+#Візуалізація описової статистики даних
 
 data.describe()
+
+#Проведення кореляції між всіма змінними
 
 correlation = data.corr()
 plt.figure(figsize=(12,12))
 sns.heatmap(correlation, annot=True, cmap="coolwarm")
 plt.title("Матриця кореляції")
 plt.show()
+
+#Заповнення даних, що були пропущені, середніми значеннями (медіаною)
 
 print(data.isnull().sum())
 
@@ -117,6 +126,7 @@ print(data.isnull().sum())
 data = data.astype(float)
 print(data.info())
 
+#Перемішування даних, їх стандартизація та поділ на тестові й навчальні дані
 
 data = shuffle(data, random_state=42)
 
@@ -131,8 +141,7 @@ X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 joblib.dump(scaler, "scaler.pkl")
 
-### Звичайний класифікатор для порівння значень якості моделі
-
+# Проведення звичайного класифікатора для порівння значень якості моделі
 
 sgd_clf = SGDClassifier(random_state=42)
 
@@ -153,8 +162,8 @@ y_pred = best_model.predict(X_test)
 print(classification_report(y_test, y_pred))
 
 
-### Нейронна мережа для порівняння значень якості моделі
-### Тренування нейронної мережі використовуючи крос-валідаційний підбір гіперпараметрів
+## Нейронна мережа для порівняння значень якості моделі
+## Тренування нейронної мережі використовуючи крос-валідаційний підбір гіперпараметрів
 
 # callback = callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min', restore_best_weights=True)
 
@@ -209,4 +218,4 @@ y_pred = loaded_model.predict(X_test)
 y_pred = (y_pred > 0.5).astype("int")
 print(classification_report(y_test, y_pred))
 
-### Нейронна модель вказала на кращі результати, тому для подальшої класифікації даних будемо використовувати її
+## Нейронна мережа вказала на кращі результати, тому для подальшої класифікації даних будемо використовувати її
