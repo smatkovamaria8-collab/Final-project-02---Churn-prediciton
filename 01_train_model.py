@@ -216,9 +216,11 @@ print(classification_report(y_test, y_pred))
 
 # print(classification_report(y_test, y_pred))
 
-# loaded_model = load_model("my_best_model.keras")
-# y_pred = loaded_model.predict(X_test)
-# y_pred = (y_pred > 0.5).astype("int")
-# print(classification_report(y_test, y_pred))
+loaded_model = load_model("my_best_model.keras")
+y_pred = loaded_model.predict(X_test)
+y_pred = (y_pred > 0.5).astype("int")
+print(classification_report(y_test, y_pred))
+
+loaded_model.summary()
 
 ## Нейронна мережа вказала на кращі результати, тому для подальшої класифікації даних будемо використовувати її
