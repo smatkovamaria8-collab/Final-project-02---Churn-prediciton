@@ -37,66 +37,66 @@ sns.countplot(x="is_tv_subscriber", hue="is_tv_subscriber", data=data, legend= T
 plt.xlabel("Підписка клієнтів на телебачення", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
 plt.legend(["0 - без підписки", "1 - з підпискою"], fontsize=10)
-plt.title("Розподіл клієнтів за наявністю підписки на телебачення", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за наявністю підписки на телебачення", fontsize="medium", color="#ab094c")
 plt.show()
 
 sns.countplot(x="is_movie_package_subscriber", hue="is_movie_package_subscriber", data=data, legend= True)
 plt.xlabel("Підписка клієнтів на пакет фільмів", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
 plt.legend(["0 - без підписки", "1 - з підпискою"], fontsize=10)
-plt.title("Розподіл клієнтів за наявністю підписки на пакет фільмів", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за наявністю підписки на пакет фільмів", fontsize="medium", color="#ab094c")
 plt.show()
 
 sns.histplot(x = "subscription_age", data=data)
 plt.xlabel("Термін підписки", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
-plt.title("Розподіл клієнтів за терміном підписки", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за терміном підписки", fontsize="medium", color="#ab094c")
 plt.show()
 
 sns.histplot(x = "bill_avg", data=data)
 plt.xlabel("Середній рахунок", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
 plt.xlim(-10, 120) 
-plt.title("Розподіл клієнтів за середнім рахунком за користування сервісами компанії", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за середнім рахунком за користування сервісами компанії", fontsize="medium", color="#ab094c")
 plt.show()
 
 sns.histplot(x = "reamining_contract", data=data)
 plt.xlabel("Термін контракту, що залишився", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
-plt.title("Розподіл клієнтів за терміном контракту, що залишився", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за терміном контракту, що залишився", fontsize="medium", color="#ab094c")
 plt.show()
 
 sns.countplot(x="service_failure_count", data=data)
 plt.xlabel("Кількість збоїв у сервісі", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
-plt.title("Розподіл клієнтів за кількістю збоїв у сервісі", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за кількістю збоїв у сервісі", fontsize="medium", color="#ab094c")
 plt.show()
 
 sns.histplot(x = "download_avg", data=data)
 plt.xlabel("Середня кількість завантажень", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
-plt.title("Розподіл клієнтів за середньою кількістю завантажень", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за середньою кількістю завантажень", fontsize="medium", color="#ab094c")
 plt.xlim(0, 600) 
 plt.show()
 
 sns.histplot(x = "upload_avg", data=data)
 plt.xlabel("Середня кількість вивантажень", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
-plt.title("Розподіл клієнтів за середньою кількістю вивантажень", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за середньою кількістю вивантажень", fontsize="medium", color="#ab094c")
 plt.xlim(0, 50) 
 plt.show()
 
 sns.countplot(x="download_over_limit", data=data)
 plt.xlabel("Скачувань понад норму", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
-plt.title("Розподіл клієнтів за кількістю скачувань понад норму", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за кількістю скачувань понад норму", fontsize="medium", color="#ab094c")
 plt.show()
 
 sns.countplot(x="churn", hue = "churn", data=data, legend=True)
 plt.xlabel("Дані про відток", fontsize="medium", color="midnightblue")
 plt.ylabel("Кількість людей", fontsize="medium", color="midnightblue")
 plt.legend(["0 - клієнт залишився", "1 - клієнт пішов"], fontsize=10)
-plt.title("Розподіл клієнтів за відтоком", fontsize="medium", color="midnightblue")
+plt.title("Розподіл клієнтів за відтоком", fontsize="medium", color="#ab094c")
 plt.show()
 
 print(data.info())
@@ -112,6 +112,9 @@ plt.figure(figsize=(12,12))
 sns.heatmap(correlation, annot=True, cmap="coolwarm")
 plt.title("Матриця кореляції")
 plt.show()
+
+# Як бачимо, найсильнішу кореляцію із змінною відтоку клієнта (churn) є змінна remaining_contract. 
+# Також суттєво впливають змінні is_tv_subscriber and is_movie_package_subscriber
 
 #Заповнення даних, що були пропущені, середніми значеннями (медіаною)
 
@@ -213,9 +216,9 @@ print(classification_report(y_test, y_pred))
 
 # print(classification_report(y_test, y_pred))
 
-loaded_model = load_model("my_best_model.keras")
-y_pred = loaded_model.predict(X_test)
-y_pred = (y_pred > 0.5).astype("int")
-print(classification_report(y_test, y_pred))
+# loaded_model = load_model("my_best_model.keras")
+# y_pred = loaded_model.predict(X_test)
+# y_pred = (y_pred > 0.5).astype("int")
+# print(classification_report(y_test, y_pred))
 
 ## Нейронна мережа вказала на кращі результати, тому для подальшої класифікації даних будемо використовувати її
