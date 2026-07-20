@@ -1,67 +1,69 @@
-# GoIT фінальний проєкт
-Фінальний проєкт курсу Python Data Science and Machine Learning
+# GoIT Final Project
+Final project for the Python Data Science and Machine Learning course.
 
-## Мета проєкту
-У даному проєкті нашою метою було створення моделі, яка б прогнозувала відтік клієнтів сервісу, використовуючи попередні дані щодо клієнтів.
+## Project Goal
+The goal of this project was to create a model capable of predicting customer churn for a service using historical customer data.
 
-## Виконання завдань відповідно до поставленої мети
-Спочатку нами було завантажено дані та проведено їхню первинну обробку, що включало візуалізацію, проведення дескриптивної статистики, видалення дублікатів, заповнення пропущених даних тощо. Дані етапи були проведені у файлі `01_train_model.py`.
-У цьому документі ми також навчили два різних алгоритма для проведення класифікації клієнтів, з метою порівняння їхньої точності класифікації - SGD-класифікатор і Нейронну мережу. Для підбору параметрів було використано крос-валідацію. Найкращі результати якості моделі мала нейронна мережа, тому в основу класифікації нових клієнтів було використано саме її.
+## Task Implementation According to the Project Goal
+First, we loaded the dataset and performed initial data preprocessing, which included data visualization, descriptive statistical analysis, duplicate removal, handling missing values, and other preprocessing steps. These stages were implemented in the `01_train_model.py` file.
+In this document, we also trained two different classification algorithms in order to compare their classification accuracy: an SGD Classifier and a Neural Network. Cross-validation was used for hyperparameter tuning. The neural network achieved the best performance, so it was selected as the final model for classifying new customers.
 
-Крос-валідацію параметрів нейромережі було проведено використовуючи модуль KerasTuner. Відповідно всі випробовані випадково створені нейронні мережі зберігаються у папці `my_dir`, де у кожній папці `trial` знаходяться гіперпараметри, на яких вчаться дві нейронні мережі із різною ініціалізацією ваг. Загалом було проведено 15 trial, тобто було навчено 30 нейронних мереж. Найкраща модель мала такі показники якості: accuracy - 0.92, precision - 0.92, recall (повнота) - 0.92 та f1-score - 0.92.
+Neural network hyperparameter tuning was performed using the KerasTuner module. Accordingly, all randomly generated neural network configurations are stored in the `my_dir` folder. Each `trial` directory contains the hyperparameters used to train two neural networks with different weight initializations. In total, 15 trials were conducted, meaning 30 neural networks were trained. The best model achieved the following performance metrics: accuracy - 0.92, precision - 0.92, recall - 0.92, F1-score - 0.92.
 
-Отримана нейронна мережа мала наступну структуру:
-![Структура нейронної мережі](model_summary.png)
+The resulting neural network had the following architecture:
+![The structure of neural network](model_summary.png)
 
-## Структура файлів проєкту
+## Project File Structure
 
-* `my_dir` - папка з результатами роботи KerasTuner
-* `01_train_model.py` - скрипт, що відповідає за первинну обробку даних та тренування алгоритмів 
-* `02_streamlit.py` - скрипт для побудову інтерфейсу 
-* `.dockerignore` і `Docekrfile` - файли, що містять інформацію щодо створення Docker-образу, контейнеризації файлів проєкту
-* `internet_service_churn.csv` - таблиця із даними щодо всіх клієнтів
-* `model_summary.png` - фото структури нейронної мережі
-* `my_best_model.keras` - файл, що зберігає нейронну мережу із найкращими гіперпараметрами, ті які показали найкращі показники якості класифікації
-* `poetry.lock` та `pyproject.toml` - файли, що зберігають інформацію щодо скачених та використаних модулів у даному проєкті використовуючи вірутальне середовище poetry
-* `requirements.txt` - файл, що зберігає список всіх використаниих модулів у їх більш загальному вигляді
-* `scaler.pkl` - файл, що зберігає параметри scaler, що були підібрані щодо навчальних даних, з метою використання у подальшому процесі стандартизації даних
+* `my_dir` - folder containing the KerasTuner results
+* `01_train_model.py` — script responsible for initial data preprocessing and model training
+* `02_streamlit.py` — script for building the user interface
+* `.dockerignore` and `Dockerfile` — files containing information for creating the Docker image and containerizing the project
+* `internet_service_churn.csv` — dataset containing information about all customers
+* `model_summary.png` — image of the neural network architecture
+* `my_best_model.keras` — file containing the neural network with the best hyperparameters and classification performance
+* `poetry.lock` and `pyproject.toml` — files storing information about the installed and used modules in this project when using the Poetry virtual environment
+* `requirements.txt` — file containing a general list of all required Python packages
+* `scaler.pkl` — file containing the scaler parameters fitted on the training data for use during future data standardization
 
-## Запуск моделі використовуючи контейнер
+## Running the Model Using a Docker Container
 
-Запустіть Docker Desktop на комп'ютері.
+Start Docker Desktop on your computer.
 
-Спочатку Вам потрібно склонувати посилання даного проєкту до Вашого комп'ютера. Це можна зробити через системний термінал відповідно до Вашого системного забезпечення. 
-* Для Windows це нажаття кнопок `Win + R` та написати `cmd`.
-* Для MacBook натиснути `Cmd + Пробіл` (відкриється пошук Spotlight), ввести слово Термінал і натиснути `Enter`.
-* Для Linux натиснути комбінацію клавіш `Ctrl + Alt + T`
+First, clone the project repository to your computer. This can be done through the system terminal depending on your operating system.
 
-Відкрийте термінал та введіть: 
+* Windows: Press `Win + R`, type `cmd`, and press `Enter`.
+* macOS: Press `Cmd + Space` to open Spotlight Search, type `Terminal`, and press `Enter`.
+* Linux: Press `Ctrl + Alt + T`
+
+Open the terminal and run:
 ```bash
-git clone https://github.com/smatkovamaria8-collab/goit-final-project.git
+git clone https://github.com/smatkovamaria8-collab/Final-project-02---Churn-prediciton.git
 ```
-Зайдіть всередину проєкту
+Navigate to the project directory:
 
 ```bash
-cd goit-final-project
+cd Final-project-02---Churn-prediciton
 ```
 
-Запустіть контеризацію проєкту
+Build the Docker image:
 ```bash
 docker build . -t prediction-app
 ```
 
-Запустіть контейнер
+Run the container:
 ```bash
 docker run -p 8501:8501 prediction-app
 ```
-Перейдіть за отриманим посиланням від Local URL
+Open the Local URL displayed in the terminal.
 
 
-## Інструкція з використання
+## Usage Instructions
 
-У відкритому веб-браузері Вам надається можливість ввести дані щодо клієнта, відтік якого Вас цікавить.
-* Заповніть всі поля введення керуючись інструкціями на сайті.
-* Коли Ви заповните всі поля нажміть кнопку - "Спрогнозувати відтік"
-* На сайті має відобразити текстовий формат щодо ймовірності відтоку клієнта та відповідний графік
+In the opened web browser, you can enter the data of the customer whose churn probability you want to predict.
 
-Щоб зупинити програму, нажміть на терміналі комбінацію клафіш `Cltr + C`
+* Fill in all input fields according to the instructions displayed on the website.
+* After completing all fields, click the “Predict Churn” button.
+* The application will display the predicted customer churn probability in text format along with a corresponding chart.
+
+To stop the application, press `Ctrl + C` in the terminal.
